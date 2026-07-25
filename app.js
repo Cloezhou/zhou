@@ -1,5 +1,13 @@
 const $=s=>document.querySelector(s),$$=s=>[...document.querySelectorAll(s)],money=n=>Math.round(n).toLocaleString("zh-CN");
-const state={use:"gaming",scope:"tower",mode:"mixed",cpuBrand:"auto",gpuBrand:"auto",variant:0};
+const state={use:"gaming",detail:"3A 大作",scope:"tower",mode:"mixed",cpuBrand:"auto",gpuBrand:"auto",variant:0};
+const sceneChoices={
+ gaming:{title:"游戏开黑",desc:"先选你最常玩的游戏类型",items:[["高帧电竞","CS2 / 无畏契约 / LOL","1080","pro"],["热门网游","永劫无间 / PUBG / 魔兽","1440","balanced"],["3A 大作","黑神话 / 赛博朋克 / 荒野大镖客","1440","pro"],["4K 单机","4K 高画质 / 光追游戏","2160","pro"],["模拟经营","城市天际线 / 模拟飞行","1440","balanced"],["多开搬砖","多开网游 / 模拟器","1080","pro"]]},
+ office:{title:"办公学习",desc:"选择主要工作和学习方式",items:[["日常文档","Office / 网页 / 邮件","1080","light"],["网课学习","视频会议 / 在线课堂","1080","balanced"],["编程开发","VS Code / Docker / 多任务","1440","pro"],["财务办公","Excel 大表 / ERP / 多屏","1440","balanced"],["移动办公","小机箱 / 低功耗 / 安静","1080","light"],["综合办公","办公、影音和轻度游戏","1440","balanced"]]},
+ design:{title:"设计剪辑",desc:"选择你最常使用的创作软件",items:[["平面设计","Photoshop / Illustrator","1440","balanced"],["视频剪辑","Premiere / 剪映专业版","1440","pro"],["特效包装","After Effects / 达芬奇","2160","pro"],["摄影修图","Lightroom / 大批量 RAW","1440","pro"],["UI 设计","Figma / 即时设计 / PS","1440","balanced"],["4K 创作","4K 多轨剪辑与调色","2160","pro"]]},
+ stream:{title:"直播开播",desc:"选择直播内容和使用方式",items:[["游戏直播","游戏 + OBS 同机推流","1440","pro"],["带货直播","多平台推流 / 直播伴侣","1080","balanced"],["虚拟主播","Live2D / 动捕 / OBS","1440","pro"],["赛事导播","多路画面 / 采集卡","1440","pro"]]},
+ ai:{title:"AI 本地部署",desc:"显存容量会直接影响可运行的模型",items:[["AI 绘图","Stable Diffusion / ComfyUI","1440","pro"],["本地大模型","7B–32B LLM 推理","1440","pro"],["AI 视频","图生视频 / 视频生成","2160","pro"],["开发训练","CUDA / PyTorch / 微调","1440","pro"]]},
+ cad:{title:"3D / CAD",desc:"选择你的生产力软件和项目规模",items:[["机械 CAD","SolidWorks / AutoCAD","1440","pro"],["建筑设计","Revit / SketchUp / BIM","1440","pro"],["三维建模","Blender / C4D / Maya","1440","pro"],["离线渲染","V-Ray / Corona / Blender","2160","pro"]]}
+};
 const profiles={
  gaming:{title:"游戏电竞",tag:"高帧游戏",gpu:.39,cpu:.19,power:450},
  office:{title:"办公学习",tag:"安静高效",gpu:.12,cpu:.25,power:220},
@@ -17,7 +25,19 @@ function tier(b){return b<5200?0:b<8500?1:b<14000?2:b<25000?3:4}
 function pick(a,n){return a[Math.min(a.length-1,Math.max(0,n))]}
 function segment(id,key){$$(`#${id} button`).forEach(b=>b.onclick=()=>{$$(`#${id} button`).forEach(x=>x.classList.remove("active"));b.classList.add("active");state[key]=b.dataset.value;generate()})}
 segment("scope","scope");segment("mode","mode");segment("cpuBrand","cpuBrand");segment("gpuBrand","gpuBrand");
-$$(".use").forEach(b=>b.onclick=()=>{$$(".use").forEach(x=>x.classList.remove("active"));b.classList.add("active");state.use=b.dataset.value;generate()});
+let pendingChoice=null;
+function openChoice(use){
+ state.use=use;pendingChoice=null;const config=sceneChoices[use],sheet=$("#choiceSheet");
+ $("#choiceTitle").textContent=config.title;$("#choiceDesc").textContent=config.desc;
+ $("#choiceList").innerHTML=config.items.map((item,i)=>`<button type="button" data-choice="${i}"><span><strong>${item[0]}</strong><small>${item[1]}</small></span><i>›</i></button>`).join("");
+ $("#choiceSummary").textContent="请选择一个具体场景";$("#confirmChoice").disabled=true;
+ sheet.classList.add("show");sheet.setAttribute("aria-hidden","false");document.body.classList.add("sheet-open");
+ $$("#choiceList button").forEach(b=>b.onclick=()=>{$$("#choiceList button").forEach(x=>x.classList.remove("active"));b.classList.add("active");pendingChoice=config.items[+b.dataset.choice];$("#choiceSummary").textContent=`已选：${pendingChoice[0]} · ${pendingChoice[1]}`;$("#confirmChoice").disabled=false});
+}
+function closeChoice(){$("#choiceSheet").classList.remove("show");$("#choiceSheet").setAttribute("aria-hidden","true");document.body.classList.remove("sheet-open")}
+$$(".scene").forEach(b=>b.onclick=()=>openChoice(b.dataset.value));
+$("#closeSheet").onclick=closeChoice;$("#choiceSheet").onclick=e=>{if(e.target===$("#choiceSheet"))closeChoice()};
+$("#confirmChoice").onclick=()=>{if(!pendingChoice)return;state.detail=pendingChoice[0];$("#resolution").value=pendingChoice[2];$("#intensity").value=pendingChoice[3];$$(".scene").forEach(x=>x.classList.toggle("active",x.dataset.value===state.use));const chosen=$(`.scene[data-value="${state.use}"] small`);if(chosen)chosen.textContent=pendingChoice[0];closeChoice();generate();$("#result").scrollIntoView({behavior:"smooth",block:"start"})};
 const budget=$("#budget");budget.oninput=()=>{$("#budgetText").textContent=money(budget.value);$$("[data-budget]").forEach(b=>b.classList.toggle("active",+b.dataset.budget===+budget.value));generate()};
 $$("[data-budget]").forEach(b=>b.onclick=()=>{budget.value=b.dataset.budget;budget.dispatchEvent(new Event("input"))});
 $("#usedLevel").oninput=e=>{$("#usedText").textContent=["保守 · 只买低风险配件","适中 · 显卡/CPU 可考虑","激进 · 优先追求性能"][e.target.value];generate()};
@@ -49,7 +69,7 @@ function generate(){
  window.parts.push(...extras);
  const total=window.parts.reduce((s,x)=>s+x.price,0),power=Math.round(p.power*(noGpu?.48:1)*(1+t*.03)),psu=upgrade?(power>500?1000:850):(power>500?850:650);
  const newRate=used===0?100:used===1?72:46,score=Math.max(81,97-(res===2160&&t<2?7:0)-(state.gpuBrand==="igpu"&&state.use==="gaming"?10:0)+(upgrade?2:0));
- $("#resultTitle").textContent=`${p.title}${intensity==="pro"?"专业":intensity==="light"?"轻量":"均衡"}配置`;
+ $("#resultTitle").textContent=`${state.detail} · ${p.title}${intensity==="pro"?"专业":intensity==="light"?"轻量":"均衡"}配置`;
  $("#resultTag").textContent=`${p.tag} · ${res===2160?"4K":res===1440?"2K":"1080P"} · ${state.mode==="new"?"全新":state.mode==="used"?"二手优先":"新旧混搭"}`;
  $("#score").textContent=score;$("#power").textContent=power+"W";$("#headroom").textContent=Math.round((1-power/psu)*100)+"%";$("#newRate").textContent=newRate+"%";$("#cycle").textContent=years+" 年";
  $("#partCount").textContent=window.parts.length+" 项";$("#compatText").textContent=`${cpuPlatform.toUpperCase()} 平台 · ${psu}W 电源 · 尺寸与接口匹配`;
@@ -76,7 +96,7 @@ $("#sentenceForm").onsubmit=e=>{
  if(amount){let n=parseFloat(amount[1]),unit=amount[2];if(unit==="万")n*=10000;else if(unit==="千"||unit==="k"||unit==="K")n*=1000;if(n>=2500&&n<=50000){budget.value=Math.round(n/500)*500;budget.dispatchEvent(new Event("input"))}}
  const map=[["ai","AI|大模型|绘图"],["design","剪辑|设计|PS|PR|AE"],["stream","直播|推流"],["cad","CAD|建模|渲染|3D"],["office","办公|学习|网课"],["gaming","游戏|3A|电竞|开黑"]];
  const hit=map.find(([,p])=>new RegExp(p,"i").test(text));
- if(hit){state.use=hit[0];$$(".use").forEach(x=>x.classList.toggle("active",x.dataset.value===state.use))}
+ if(hit){state.use=hit[0];state.detail=sceneChoices[state.use].items[0][0];$$(".scene").forEach(x=>x.classList.toggle("active",x.dataset.value===state.use))}
  if(/安静|静音/.test(text))$("#quiet").checked=true;
  if(/灯|RGB|海景房/i.test(text))$("#rgb").checked=true;
  if(/全新/.test(text)){$$("#mode button").forEach(x=>x.classList.toggle("active",x.dataset.value==="new"));state.mode="new"}
@@ -84,4 +104,6 @@ $("#sentenceForm").onsubmit=e=>{
  generate();$("#result").scrollIntoView({behavior:"smooth",block:"start"});
 };
 $("#capability").onclick=()=>{openSettings();$("#sentence").placeholder="输入你现在的 CPU、显卡、内存型号";$("#sentence").focus()};
+$$("[data-part-tool]").forEach(b=>b.onclick=()=>{openSettings();$("#toast").textContent={cpu:"已打开 CPU 相关设置",gpu:"已打开显卡相关设置",board:"已打开主板搭配设置",power:"已打开电源功耗设置"}[b.dataset.partTool];$("#toast").classList.add("show");setTimeout(()=>$("#toast").classList.remove("show"),1600)});
+$$("[data-nav]").forEach(b=>b.onclick=()=>{$$(".bottom-nav button").forEach(x=>x.classList.remove("active"));b.classList.add("active");if(b.dataset.nav==="home")window.scrollTo({top:0,behavior:"smooth"});if(b.dataset.nav==="build")openSettings();if(["favorites","history","mine"].includes(b.dataset.nav)){ $("#toast").textContent={favorites:"收藏会在保存方案后显示",history:"本次生成记录已保留在当前页面",mine:"无需登录即可使用装机功能"}[b.dataset.nav];$("#toast").classList.add("show");setTimeout(()=>$("#toast").classList.remove("show"),1800)}});
 generate();

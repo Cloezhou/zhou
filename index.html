@@ -43,7 +43,7 @@
     <section class="dashboard-section">
       <div class="section-head"><h2>常用装机</h2><span>选场景 · 秒出方案</span></div>
       <div class="scene-grid" id="uses">
-        <button class="scene scene-game active" data-value="gaming"><i>🎮</i><span><strong>游戏开黑</strong><small>3A / 高帧电竞</small></span></button>
+        <button class="scene scene-game active" data-value="gaming"><i>🎮</i><span><strong>游戏开黑</strong><small>3A / 高帧电竞</small></span><em>去选择 ›</em></button>
         <button class="scene scene-office" data-value="office"><i>📚</i><span><strong>办公学习</strong><small>轻办公 / 网课</small></span></button>
         <button class="scene scene-design" data-value="design"><i>🎨</i><span><strong>设计剪辑</strong><small>PS / PR / AE</small></span></button>
         <button class="scene scene-stream" data-value="stream"><i>📹</i><span><strong>直播开播</strong><small>OBS / 多平台</small></span></button>
@@ -64,10 +64,10 @@
     <section class="dashboard-section">
       <div class="section-head"><h2>配件速查</h2><span>横向查看</span></div>
       <div class="parts-scroll">
-        <article><i>▣</i><strong>CPU 天梯</strong><small>性能与价格</small></article>
-        <article><i>▧</i><strong>显卡天梯</strong><small>帧率与显存</small></article>
-        <article><i>◫</i><strong>主板搭配</strong><small>接口与供电</small></article>
-        <article><i>◉</i><strong>电源计算</strong><small>功耗与余量</small></article>
+        <button data-part-tool="cpu"><i>▣</i><strong>CPU 天梯</strong><small>性能与价格</small></button>
+        <button data-part-tool="gpu"><i>▧</i><strong>显卡天梯</strong><small>帧率与显存</small></button>
+        <button data-part-tool="board"><i>◫</i><strong>主板搭配</strong><small>接口与供电</small></button>
+        <button data-part-tool="power"><i>◉</i><strong>电源计算</strong><small>功耗与余量</small></button>
       </div>
     </section>
 
@@ -132,8 +132,17 @@
   </main>
 
   <nav class="bottom-nav">
-    <button class="active"><i>⌂</i><span>首页</span></button><button><i>♧</i><span>社区</span></button><button data-open="settings"><i>▣</i><span>装机</span></button><button><i>↻</i><span>历史</span></button><button><i>♙</i><span>我的</span></button>
+    <button class="active" data-nav="home"><i>⌂</i><span>首页</span></button><button data-nav="favorites"><i>♡</i><span>收藏</span></button><button data-open="settings" data-nav="build"><i>▣</i><span>装机</span></button><button data-nav="history"><i>↻</i><span>历史</span></button><button data-nav="mine"><i>♙</i><span>我的</span></button>
   </nav>
+  <div class="sheet-backdrop" id="choiceSheet" aria-hidden="true">
+    <section class="choice-sheet" role="dialog" aria-modal="true" aria-labelledby="choiceTitle">
+      <div class="sheet-handle"></div>
+      <header><div><small>选择你的需求</small><h2 id="choiceTitle">游戏开黑</h2><p id="choiceDesc">选择得越具体，推荐越准确</p></div><button id="closeSheet" aria-label="关闭">×</button></header>
+      <div class="choice-list" id="choiceList"></div>
+      <div class="choice-summary" id="choiceSummary">请选择一个具体场景</div>
+      <button class="sheet-confirm" id="confirmChoice" disabled>确认选择并生成方案</button>
+    </section>
+  </div>
   <div id="toast">配置单已复制</div>
   <script src="./app.js"></script>
 </body>
