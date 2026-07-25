@@ -3,64 +3,137 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-  <meta name="theme-color" content="#080b10">
-  <title>装机智选｜一键生成电脑配置</title>
+  <meta name="theme-color" content="#090b0f">
+  <title>瓜瓜装机｜一句话生成电脑配置</title>
   <link rel="stylesheet" href="./style.css">
 </head>
 <body>
-  <main class="page">
-    <header class="hero">
-      <div class="eyebrow">✦ 简单三步，配出更懂你的电脑</div>
-      <h1>你的预算，<span>每一分都花在性能上</span></h1>
-      <p>选择预算和用途，一键生成兼容、均衡、可升级的电脑配置。</p>
+  <main class="app-shell">
+    <header class="topbar">
+      <div class="brand">
+        <span class="brand-mark">装</span>
+        <div><strong>瓜瓜装机</strong><small>GUAGUA PC BUILDER</small></div>
+      </div>
+      <button class="round-btn" aria-label="更多功能">•••</button>
     </header>
 
-    <section class="card controls">
-      <div class="step"><b>01</b><div><h2>你的预算</h2><p>主机总预算范围</p></div></div>
-      <div class="budget-box">
-        <div class="budget-line"><span>¥</span><strong id="budgetText">8,000</strong><small>人民币</small></div>
-        <input id="budget" type="range" min="3000" max="30000" step="500" value="8000">
-        <div class="range-label"><span>¥3,000 入门</span><span>¥15,000 高端</span><span>¥30,000 旗舰</span></div>
-        <div class="quick-grid">
-          <button data-budget="5000">¥5k</button><button class="active" data-budget="8000">¥8k</button>
-          <button data-budget="12000">¥12k</button><button data-budget="20000">¥20k</button>
+    <section class="hero-card">
+      <div class="hero-copy">
+        <span class="kicker">今日推荐　·　小白模式</span>
+        <h1>一句话<br>拼出你的电脑</h1>
+        <p>预算、用途、外设一次说清，先给能买的方案。</p>
+        <div class="hero-actions">
+          <button id="heroGenerate" class="primary">开始生成</button>
+          <button id="askHelper" class="soft">问瓜瓜</button>
         </div>
       </div>
-
-      <div class="step section-step"><b>02</b><div><h2>主要用途</h2><p>我们会据此分配性能预算</p></div></div>
-      <div class="use-grid">
-        <button class="use active" data-use="gaming"><i>⌁</i><strong>游戏电竞</strong><small>高帧率 · 2K/4K</small></button>
-        <button class="use" data-use="office"><i>▦</i><strong>办公学习</strong><small>稳定 · 低功耗</small></button>
-        <button class="use" data-use="design"><i>◈</i><strong>设计剪辑</strong><small>渲染 · 大内存</small></button>
-        <button class="use" data-use="ai"><i>✦</i><strong>AI / 开发</strong><small>算力 · 多任务</small></button>
+      <div class="bot-art" aria-hidden="true">
+        <i class="float-chip">CPU</i><i class="float-gpu">GPU</i>
+        <div class="antenna"></div>
+        <div class="bot-head"><b></b><b></b><span></span></div>
+        <div class="bot-body">⚙</div>
       </div>
-
-      <label class="tower-row"><span><strong>仅配置主机</strong><small>不包含显示器与外设</small></span><input id="tower" type="checkbox" checked></label>
-      <h3>购买方案</h3>
-      <div class="mode-grid"><button data-mode="new">全新优先</button><button class="active" data-mode="mixed">新旧混搭</button><button data-mode="used">二手优先</button></div>
-      <button id="generate" class="generate">✦ 一键生成我的配置　→</button>
     </section>
 
-    <section class="card result">
-      <div class="result-head"><div><span>为你推荐</span><h2 id="resultTitle">游戏电竞均衡配置</h2><p id="resultTag">2K 高帧畅玩 · 兼顾未来升级</p></div><div class="score"><strong>96</strong><small>均衡指数</small></div></div>
-      <div class="compat">✓ <span><strong>兼容性检查通过</strong><small>功耗、尺寸与接口均匹配</small></span><small>8 项硬件</small></div>
+    <form class="sentence-box" id="sentenceForm">
+      <input id="sentence" autocomplete="off" placeholder="例如：6000元，玩3A，想安静一点">
+      <button type="submit">发送</button>
+    </form>
+
+    <section class="dashboard-section">
+      <div class="section-head"><h2>常用装机</h2><span>选场景 · 秒出方案</span></div>
+      <div class="scene-grid" id="uses">
+        <button class="scene scene-game active" data-value="gaming"><i>🎮</i><span><strong>游戏开黑</strong><small>3A / 高帧电竞</small></span></button>
+        <button class="scene scene-office" data-value="office"><i>📚</i><span><strong>办公学习</strong><small>轻办公 / 网课</small></span></button>
+        <button class="scene scene-design" data-value="design"><i>🎨</i><span><strong>设计剪辑</strong><small>PS / PR / AE</small></span></button>
+        <button class="scene scene-stream" data-value="stream"><i>📹</i><span><strong>直播开播</strong><small>OBS / 多平台</small></span></button>
+        <button class="scene scene-ai" data-value="ai"><i>✨</i><span><strong>AI 本地部署</strong><small>大模型 / 绘图</small></span></button>
+        <button class="scene scene-cad" data-value="cad"><i>⬡</i><span><strong>3D / CAD</strong><small>建模 / 渲染</small></span></button>
+      </div>
+    </section>
+
+    <section class="dashboard-section">
+      <div class="section-head"><h2>实用检测</h2><span>报价 · 性能 · 配置</span></div>
+      <div class="tool-grid">
+        <button data-open="settings"><i>🔍</i><strong>报价单体检</strong><small>识别型号与价格风险</small></button>
+        <button id="capability"><i>🖥️</i><strong>我的电脑能玩啥</strong><small>查帧率与升级方向</small></button>
+        <button data-open="settings"><i>🎯</i><strong>按游戏选配置</strong><small>从目标帧率反推硬件</small></button>
+      </div>
+    </section>
+
+    <section class="dashboard-section">
+      <div class="section-head"><h2>配件速查</h2><span>横向查看</span></div>
+      <div class="parts-scroll">
+        <article><i>▣</i><strong>CPU 天梯</strong><small>性能与价格</small></article>
+        <article><i>▧</i><strong>显卡天梯</strong><small>帧率与显存</small></article>
+        <article><i>◫</i><strong>主板搭配</strong><small>接口与供电</small></article>
+        <article><i>◉</i><strong>电源计算</strong><small>功耗与余量</small></article>
+      </div>
+    </section>
+
+    <section class="pro-card" id="settings">
+      <button class="pro-toggle" id="proToggle">
+        <span><i>⚙</i><b>专业配置选项</b><small>预算、品牌、容量、新旧策略</small></span>
+        <em>展开设置⌄</em>
+      </button>
+      <div class="pro-content" id="proContent">
+        <div class="setting-title"><b>01</b><span><strong>预算与购买范围</strong><small>预算越准确，推荐越均衡</small></span></div>
+        <div class="budget-box">
+          <div class="budget-line"><span>¥</span><strong id="budgetText">8,000</strong><small>总预算</small></div>
+          <input id="budget" type="range" min="2500" max="50000" step="500" value="8000">
+          <div class="quick-grid"><button type="button" data-budget="4000">¥4k</button><button type="button" data-budget="6000">¥6k</button><button type="button" class="active" data-budget="8000">¥8k</button><button type="button" data-budget="12000">¥12k</button><button type="button" data-budget="20000">¥20k</button><button type="button" data-budget="30000">¥30k</button></div>
+        </div>
+        <div class="segmented" id="scope"><button type="button" class="active" data-value="tower">仅主机</button><button type="button" data-value="monitor">主机＋显示器</button><button type="button" data-value="full">完整外设</button></div>
+
+        <div class="form-grid">
+          <label><span>目标分辨率</span><select id="resolution"><option value="1080">1080P 高帧</option><option value="1440" selected>2K / 1440P</option><option value="2160">4K / 2160P</option></select></label>
+          <label><span>使用强度</span><select id="intensity"><option value="light">轻度日常</option><option value="balanced" selected>中高强度</option><option value="pro">专业重载</option></select></label>
+          <label><span>预计使用年限</span><select id="years"><option value="2">2 年够用</option><option value="4" selected>4 年均衡</option><option value="6">6 年耐用</option></select></label>
+          <label><span>机箱体积</span><select id="size"><option value="any">不限</option><option value="mini">迷你 ITX</option><option value="compact">紧凑 M-ATX</option><option value="full">标准 ATX</option></select></label>
+        </div>
+
+        <h3>CPU 平台</h3>
+        <div class="segmented" id="cpuBrand"><button type="button" class="active" data-value="auto">智能推荐</button><button type="button" data-value="amd">AMD</button><button type="button" data-value="intel">Intel</button></div>
+        <h3>显卡平台</h3>
+        <div class="segmented four" id="gpuBrand"><button type="button" class="active" data-value="auto">智能推荐</button><button type="button" data-value="nvidia">NVIDIA</button><button type="button" data-value="amd">AMD</button><button type="button" data-value="igpu">核显</button></div>
+        <div class="form-grid">
+          <label><span>内存需求</span><select id="memory"><option value="auto">自动</option><option value="16">16GB</option><option value="32">32GB</option><option value="64">64GB</option><option value="128">128GB</option></select></label>
+          <label><span>硬盘容量</span><select id="storage"><option value="auto">自动</option><option value="1">1TB</option><option value="2">2TB</option><option value="4">4TB</option><option value="6">6TB+</option></select></label>
+        </div>
+        <div class="checks">
+          <label><input id="wifi" type="checkbox" checked><span><strong>Wi‑Fi / 蓝牙</strong><small>主板内置无线连接</small></span></label>
+          <label><input id="quiet" type="checkbox"><span><strong>静音优先</strong><small>低噪风扇与电源</small></span></label>
+          <label><input id="rgb" type="checkbox"><span><strong>RGB 海景房</strong><small>灯效与侧透机箱</small></span></label>
+          <label><input id="upgrade" type="checkbox" checked><span><strong>保留升级空间</strong><small>电源与接口留余量</small></span></label>
+        </div>
+        <h3>购买策略</h3>
+        <div class="segmented" id="mode"><button type="button" data-value="new">全新省心</button><button type="button" class="active" data-value="mixed">新旧混搭</button><button type="button" data-value="used">二手优先</button></div>
+        <label class="risk-slider"><span><strong>二手接受程度</strong><em id="usedText">适中 · 显卡/CPU 可考虑</em></span><input id="usedLevel" type="range" min="0" max="2" value="1"></label>
+        <button type="button" id="generate" class="generate">✨ 生成专业配置方案</button>
+      </div>
+    </section>
+
+    <section class="result-card" id="result">
+      <div class="result-head"><div><span>AI 智能方案</span><h2 id="resultTitle">游戏电竞均衡配置</h2><p id="resultTag">2K 高帧 · 新旧混搭 · 兼顾升级</p></div><div class="score"><strong id="score">94</strong><small>匹配指数</small></div></div>
+      <div class="metrics"><div><small>预计功耗</small><strong id="power">430W</strong></div><div><small>电源余量</small><strong id="headroom">37%</strong></div><div><small>新品占比</small><strong id="newRate">72%</strong></div><div><small>升级周期</small><strong id="cycle">4 年</strong></div></div>
+      <div class="compat">✓ <span><strong>兼容性检查通过</strong><small id="compatText">接口、尺寸、功耗与散热均匹配</small></span><small id="partCount">8 项</small></div>
       <div id="parts" class="parts"></div>
-      <div class="total"><span><strong>参考总价</strong><small>当前为参考估价 · 含税</small></span><b>¥<span id="total">8,000</span></b></div>
-      <div class="actions"><button id="regenerate">↻ 重新搭配</button><button id="copy">▣ 复制配置单</button></div>
+      <div class="budget-chart"><div class="chart-head"><strong>预算分配</strong><small id="budgetDiff">预算利用率 98%</small></div><div id="chartBars"></div></div>
+      <div class="advice"><h3>方案分析</h3><ul id="advice"></ul></div>
+      <div class="total"><span><strong>参考总价</strong><small id="priceNote">当前为市场参考估价</small></span><b>¥<span id="total">8,000</span></b></div>
+      <div class="actions"><button id="regenerate">↻ 换一套方案</button><button id="copy">▣ 复制配置单</button></div>
     </section>
 
-    <section class="card source">
-      <div class="source-head"><div><h2>平台价格</h2><p>接口已预留，授权后可显示实时价格</p></div><span>下一阶段</span></div>
-      <div class="source-list">
-        <div><b>京</b><strong>京东 <small>新品</small></strong><em>待接入</em></div>
-        <div><b>淘</b><strong>淘宝 <small>新品</small></strong><em>待接入</em></div>
-        <div><b>闲</b><strong>闲鱼 <small>二手</small></strong><em>待接入</em></div>
-        <div><b>转</b><strong>转转 <small>二手</small></strong><em>待接入</em></div>
-      </div>
-      <p class="risk">二手平台接入后将增加：成色、在保状态、卖家信用、异常低价和矿卡风险提示。</p>
+    <section class="price-card">
+      <div class="section-head"><h2>新品＋二手比价</h2><span>接口预留</span></div>
+      <div class="platforms"><div><b>京</b><span>京东<small>新品 / 售后稳</small></span></div><div><b>淘</b><span>淘宝<small>新品 / 选择多</small></span></div><div><b>闲</b><span>闲鱼<small>个人二手</small></span></div><div><b>转</b><span>转转<small>验机二手</small></span></div></div>
+      <p>接入授权数据后，将自动显示最低价、常见成交区间、成色、保修和二手风险。</p>
     </section>
-    <footer>数据仅供参考，购买前请确认商品规格与售后政策</footer>
   </main>
+
+  <nav class="bottom-nav">
+    <button class="active"><i>⌂</i><span>首页</span></button><button><i>♧</i><span>社区</span></button><button data-open="settings"><i>▣</i><span>装机</span></button><button><i>↻</i><span>历史</span></button><button><i>♙</i><span>我的</span></button>
+  </nav>
   <div id="toast">配置单已复制</div>
   <script src="./app.js"></script>
 </body>
